@@ -22,8 +22,22 @@ class RegistroForm(forms.Form): #Formulario de registro de usuarios
     username = forms.EmailField(required=True) #email
     pass1 = forms.CharField(widget=forms.PasswordInput) #Pass
     pass2 = forms.CharField(widget=forms.PasswordInput) #Pass repetido
-
 class PeliculaForm(forms.ModelForm):
         class Meta:
             model = Pelicula
-            fields = ('titulo','direccion','anio','genero','sinopsis','votos')
+            fields = ('titulo','direccion','anio','genero','sinopsis','votos', 'imagen')
+            widgets = {
+                'titulo' : forms.TextInput(attrs={'class':'form-control'}),
+                'direccion' : forms.TextInput(attrs={'class':'form-control'}),
+                'anio' : forms.NumberInput(attrs={'class':'form-control'}),
+                'genero' : forms.TextInput(attrs={'class':'form-control'}),
+                'sinopsis' : forms.TextInput(attrs={'class':'form-control'}),
+                'votos' : forms.NumberInput(attrs={'class':'form-control'}),
+                'imagen' : forms.FileInput(attrs={'class': 'form-control-file'})
+                }
+class VotoForm(forms.Form):
+        todasLasPeliculas = forms.ModelChoiceField(queryset=Pelicula.objects.all(), empty_label="- Selecciona -", widget = forms.Select(attrs={'class':'form-control'}))
+       
+class GeneroForm(forms.Form):
+    CHOICES = Pelicula.objects.values_list('genero', 'genero').distinct()
+    todosLosGeneros = forms.ChoiceField(choices=CHOICES, widget = forms.Select(attrs={'class':'form-control'}))

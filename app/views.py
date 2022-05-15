@@ -2,7 +2,7 @@
 Definition of views.
 """
 from app.models import Pelicula, Critico
-from django.http import HttpRequest
+from django.http import HttpRequest, JsonResponse
 from datetime import datetime
 from django.template import RequestContext
 from app.forms import RegistroForm #formulario de registro creado en app/forms.py
@@ -16,6 +16,7 @@ from django.template import RequestContext, Context, loader
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.forms import Form
 from app.forms import PeliculaForm
+from app.forms import VotoForm, GeneroForm
 from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpRequest
@@ -114,22 +115,52 @@ def peliculas(request):
 		return render(request, 'app/peliculas.html', {'pelis': pelis})
 
 def generos(request):
-    return render(request, 'app/genero.html')
+    form = GeneroForm()
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/login')
+    if request.method == 'POST':
+        peliculas = Pelicula.objects.filter(genero=request.POST['todosLosGeneros']).order_by('-votos')
+        return render(request, 'app/genero.html', {'form' : form, 'peliculas' : peliculas})
+    return render(request, 'app/genero.html', {'form' : form})
     
 def voto(request):
-    return render(request, 'app/voto.html')
-    
+    form = VotoForm()
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/login')
+    if request.method == 'POST':
+        hasVoted = False
+        pelicula = Pelicula.objects.get(pk=request.POST['todasLasPeliculas'])
+        try:
+            critico = Critico.objects.get(usuario_id=request.user.id)
+        except Critico.DoesNotExist:
+            critico = None
+        if critico:
+            if pelicula in critico.favoritas.all():
+                hasVoted = True
+            else:
+                critico.favoritas.add(pelicula)
+                pelicula.votos = pelicula.votos + 1
+                pelicula.save()
+        else:
+            critico = Critico.objects.create(usuario_id=request.user)
+            critico.save()
+            critico.favoritas.add(pelicula)
+            pelicula.votos = pelicula.votos + 1
+            pelicula.save()
+        return render(request, 'app/voto.html', {'form' : form, 'hasVoted' : hasVoted, 'pelicula' : pelicula})
+    else:
+        return render(request, 'app/voto.html', {'form' : form})
 
 def new_pelicula(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/login')
     if request.method == "POST":
         error = False
-        form = PeliculaForm(request.POST)
+        form = PeliculaForm(request.POST, request.FILES)
         if form.is_valid():
             pelicula = form.save()
             pelicula.save()
-            return HttpResponseRedirect('/peliculas')
+            return JsonResponse({'message': 'Se ha insertado la pelicula correctamente.'})
         else:
             error = True
             return render(request, 'app/new_pelicula.html', {'form': form, 'error': error})

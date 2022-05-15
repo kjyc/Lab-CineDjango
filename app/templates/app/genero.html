@@ -7,9 +7,48 @@
 <h1>Lista de Generos de Peliculas</h1>
 <p></p>
 <h3>Formulario</h3>
-<p>Select con los distintos generos de las peliculas</p>
 
-
-<h3>Listado de las peliculas del genero seleccionado</h3>
-<p>Siempre habra al menos una ya que los generos se obtienen a partir de las peliculas</p>
+<form method="POST"> {% csrf_token %}
+	<div class="form-group">
+        <label for="genero" class="control-label">Selecciona un genero:</label>
+        {% if form %}
+        {{ form.todosLosGeneros }}
+        {% endif%}
+    </div>
+	<div class="form-group">
+        <input type="submit" value="Ver"  class="btn btn-primary"/>
+    </div>
+</form> 
+{% if peliculas %}
+<table class="table table-hover">
+	<thead class="thead-dark">
+	<tr>
+		<td>Titulo</td>
+		<td>Director</td>
+		<td>Anio</td>
+		<td>Genero</td>
+		<td>Sipnosis</td>
+		<td>Votos</td>
+		<td>Imagen</td>
+	</tr>
+	</thead>
+	<tbody>
+	{% for filma in peliculas %}
+	<tr>
+		<td>{{ filma.titulo }}</td>
+		<td>{{ filma.direccion }}</td>
+		<td>{{ filma.anio }}</td>
+		<td>{{ filma.genero }}</td>
+		<td>{{ filma.sinopsis }}</td>
+		<td>{{ filma.votos }}</td>
+		{% if filma.imagen %}
+		<td><img src="{{ filma.imagen.url }}" width="100"/></td>
+		{% else %}
+		<td><img src="/media/images/no-image.png" width="100"/></td>
+		{% endif %}
+	</tr>
+	{% endfor %}
+	</tbody>
+</table>
+{% endif %}
 {% endblock %}

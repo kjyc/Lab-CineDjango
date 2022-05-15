@@ -60,6 +60,7 @@
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\static\app\scripts\ajax.js" />
     <Content Include="app\templates\app\about.html" />
     <Content Include="app\templates\app\contact.html" />
     <Content Include="app\templates\app\favoritas.html" />
@@ -72,7 +73,6 @@
     <Content Include="app\templates\app\registro.html" />
     <Content Include="app\templates\app\genero.html" />
     <Content Include="app\templates\app\voto.html" />
-    <Content Include="db.sqlite3" />
     <None Include="Properties\PublishProfiles\VamosAlCine20220303123020 - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\VamosAlCine20220303123020 - Web Deploy.pubxml" />
     <Content Include="requirements.txt" />

@@ -5,48 +5,46 @@
 <h3>{{ message }}</h3>
 
 <h1>Insertar una pelicula</h1>
-<form action="." method="POST">
+<form id="new_pelicula" action="." method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-        <div class="form-group">
-            <label for="titulo" class="col-md-2 control-label">Titulo</label>
-            <div class="col-md-10">
-                {{ form.titulo }}
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="direccion" class="col-md-2 control-label">Direccion</label>
-            <div class="col-md-10">
-                {{ form.direccion }}
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="anio" class="col-md-2 control-label">Año</label>
-            <div class="col-md-10">
-                {{ form.anio }}
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="genero" class="col-md-2 control-label">Genero</label>
-            <div class="col-md-10">
-                {{ form.genero }}
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="sinopsis" class="col-md-2 control-label">Sinopsis</label>
-            <div class="col-md-10">
-                {{ form.sinopsis }}
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="votos" class="col-md-2 control-label">Votos</label>
-            <div class="col-md-10">
-                {{ form.votos }}
-            </div>
-        </div>
+    <br />
     <div class="form-group">
-        <div class="col-md-10">
-            <input type="submit" value="Insertar pelicula" />
-        </div>
+        <label for="titulo" class="control-label">Titulo</label>
+        {{ form.titulo }}
+    </div>
+    <div class="form-group">
+        <label for="direccion" class="control-label">Direccion</label>
+        {{ form.direccion }}
+    </div>
+    <div class="form-group">
+        <label for="anio" class="control-label">Año</label>        
+        {{ form.anio }}
+    </div>
+    <div class="form-group">
+        <label for="genero" class="control-label">Genero</label>         
+        {{ form.genero }}
+    </div>
+    <div class="form-group">
+        <label for="sinopsis" class="control-label">Sinopsis</label>         
+        {{ form.sinopsis }}
+    </div>
+    <div class="form-group">
+        <label for="votos" class="control-label">Votos</label>
+        {{ form.votos }}
+    </div>
+    <div class="form-group">
+        <label for="imagen" class="control-label">Imagen</label>
+        {{ form.imagen }}
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Insertar pelicula"  class="btn btn-primary"/>
     </div>
 </form>
+{% endblock %}
+
+{% block scripts %}
+
+{% load staticfiles %}
+<script src="{% static 'app/scripts/ajax.js' %}"></script>
+
 {% endblock %}
